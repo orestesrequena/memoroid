@@ -9,13 +9,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Switch;
 
 import week5.orestes.memoroid.R;
 import week5.orestes.memoroid.adapters.TaskAdapter;
+import week5.orestes.memoroid.common.Constants;
+import week5.orestes.memoroid.model.Task;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     TaskAdapter taskAdapter;
 
@@ -42,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         taskAdapter = new TaskAdapter(getLayoutInflater(), this);
         listView.setAdapter(taskAdapter);
         listView.setEmptyView(findViewById(R.id.main_list_empty));
+        listView.setOnItemClickListener(this);
     }
 
     @Override
@@ -70,5 +74,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Task task = taskAdapter.getItem(position);
+        Intent intent = new Intent(getApplicationContext(), TaskActivity.class);
+        intent.putExtra(Constants.TASK_ID, task.getId());
+        startActivity(intent);
     }
 }
