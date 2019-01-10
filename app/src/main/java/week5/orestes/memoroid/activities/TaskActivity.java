@@ -112,6 +112,10 @@ public class TaskActivity extends AppCompatActivity implements RadioGroup.OnChec
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_task, menu);
+        if(currentTask == null){
+            menu.findItem(R.id.menu_task_delete).setVisible(false);
+        }
+
         return true;
     }
 
@@ -123,15 +127,15 @@ public class TaskActivity extends AppCompatActivity implements RadioGroup.OnChec
         if (id == R.id.menu_task_save) {
             String sTitle = title.getText().toString();
             if (StringUtils.isNoneBlank(sTitle)) {
-                String sDescription = description.getText().toString();
                 int iPriority = getPriority();
                 if (currentTask == null){
-                    Task task = new Task(sTitle.trim(), iPriority);
+                    currentTask = new Task(sTitle.trim(), iPriority);
                 }else {
                     currentTask.setTitle(sTitle.trim());
                     currentTask.setPriority(iPriority);
+                    currentTask.setDateModif(System.currentTimeMillis());
                 }
-
+                String sDescription = description.getText().toString();
                 currentTask.setDescription(sDescription);
                 if (calendarDeadline != null) {
                     currentTask.setDeadLine(calendarDeadline.getTimeInMillis());

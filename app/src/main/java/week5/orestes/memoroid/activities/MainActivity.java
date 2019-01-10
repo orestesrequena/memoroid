@@ -10,15 +10,17 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
+import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Switch;
 
 import week5.orestes.memoroid.R;
 import week5.orestes.memoroid.adapters.TaskAdapter;
 import week5.orestes.memoroid.common.Constants;
+import week5.orestes.memoroid.managers.TaskManager;
 import week5.orestes.memoroid.model.Task;
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, CompoundButton.OnCheckedChangeListener {
 
     TaskAdapter taskAdapter;
 
@@ -46,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         listView.setAdapter(taskAdapter);
         listView.setEmptyView(findViewById(R.id.main_list_empty));
         listView.setOnItemClickListener(this);
+        switchDone.setOnCheckedChangeListener(this);
     }
 
     @Override
@@ -82,5 +85,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Intent intent = new Intent(getApplicationContext(), TaskActivity.class);
         intent.putExtra(Constants.TASK_ID, task.getId());
         startActivity(intent);
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        TaskManager.getInstance().setShowDone(isChecked);
+        taskAdapter.notifyDataSetChanged();
     }
 }

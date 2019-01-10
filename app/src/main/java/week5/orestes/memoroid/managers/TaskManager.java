@@ -16,6 +16,11 @@ public class TaskManager {
 
     private List<Task> taskList;
 
+
+
+    private boolean showDone = false;
+
+
     public static TaskManager getInstance() {
         if (instance == null) {
             instance = new TaskManager();
@@ -28,18 +33,32 @@ public class TaskManager {
     }
 
     public int getTaskSize() {
-        return taskList.size();
+        return getFilteredTasks().size();
     }
 
     public Task getTaskForPosition(int position) {
-        return taskList.get(position);
+        return getFilteredTasks().get(position);
+    }
+
+    private List<Task> getFilteredTasks(){
+        List<Task> result = new ArrayList<>();
+        for(Task t : taskList){
+            if(t.isDone()){
+                if(showDone){
+                    result.add(t);
+                }
+            }else{
+                result.add(t);
+            }
+        }
+        return result;
     }
 
     public void saveTask(Task task) {
-        if(getTaskFromId(task.getId())== null){
+        if (getTaskFromId(task.getId()) == null) {
             taskList.add(task);
-        }else {
-            taskList.set(getTaskPositionFromId(task.getId()),task);
+        } else {
+            taskList.set(getTaskPositionFromId(task.getId()), task);
         }
 
         save();
@@ -57,9 +76,10 @@ public class TaskManager {
         }
         return null;
     }
-    public  int getTaskPositionFromId (int id){
-        for ( int i =0;  i<taskList.size(); i++){
-            if (taskList.get(i).getId() == id){
+
+    public int getTaskPositionFromId(int id) {
+        for (int i = 0; i < taskList.size(); i++) {
+            if (taskList.get(i).getId() == id) {
                 return i;
             }
         }
@@ -70,5 +90,13 @@ public class TaskManager {
         int position = getTaskPositionFromId(id);
         taskList.remove(position);
         save();
+    }
+
+    public boolean isShowDone() {
+        return showDone;
+    }
+
+    public void setShowDone(boolean showDone) {
+        this.showDone = showDone;
     }
 }

@@ -17,7 +17,7 @@ public class Task {
         this.title = title;
         this.priority = priority;
         this.dateCreation = System.currentTimeMillis();
-        this.id = (int) (Math.random() * 1000) + 1;
+        this.id = (int) (Math.random() * 10000) + 1;
     }
 
     public long getDateCreation() {

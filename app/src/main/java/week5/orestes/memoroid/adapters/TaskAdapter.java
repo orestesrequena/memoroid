@@ -9,6 +9,13 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.daimajia.swipe.SwipeLayout;
+
+import org.ocpsoft.prettytime.PrettyTime;
+
+import java.text.DateFormat;
+import java.util.Date;
+
 import week5.orestes.memoroid.R;
 import week5.orestes.memoroid.managers.TaskManager;
 import week5.orestes.memoroid.model.Task;
@@ -44,7 +51,7 @@ public class TaskAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         final ViewHolder viewHolder;
-        if(convertView == null) {
+        if (convertView == null) {
             convertView = mLayoutInflater.inflate(R.layout.task_line, parent, false);
             viewHolder = new ViewHolder();
             viewHolder.title = convertView.findViewById(R.id.task_line_title);
@@ -52,16 +59,17 @@ public class TaskAdapter extends BaseAdapter {
             viewHolder.deadline = convertView.findViewById(R.id.task_line_deadline);
             viewHolder.background = convertView.findViewById(R.id.task_line_background);
             viewHolder.done = convertView.findViewById(R.id.task_line_done);
+            viewHolder.doneAction = convertView.findViewById(R.id.left_image);
             convertView.setTag(viewHolder);
-        }else{
+        } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        Task task = getItem(position);
+        final Task task = getItem(position);
         viewHolder.title.setText(task.getTitle());
         viewHolder.description.setText(task.getDescription());
 
         viewHolder.done.setVisibility(task.isDone() ? View.VISIBLE : View.GONE);
-        switch (task.getPriority()){
+        switch (task.getPriority()) {
             case 1:
                 viewHolder.background.setBackgroundColor(ContextCompat.getColor(mContext, R.color.red));
                 break;
@@ -72,12 +80,31 @@ public class TaskAdapter extends BaseAdapter {
                 viewHolder.background.setBackgroundColor(ContextCompat.getColor(mContext, R.color.green));
                 break;
         }
+        if (task.getDeadLine() != 0) {
+            PrettyTime p = new PrettyTime();
+            viewHolder.deadline.setText(p.format(new Date(task.getDeadLine())));
+        }
+        SwipeLayout swipeLayout = convertView.findViewById(R.id.swipe_layout);
+        swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
+        swipeLayout.addDrag(SwipeLayout.DragEdge.Left, convertView.findViewById(R.id.bottom_wrapper));
+        swipeLayout.addDrag(SwipeLayout.DragEdge.Right, null);
+        viewHolder.doneAction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                task.setDone(!task.isDone());
+                notifyDataSetChanged();
+                TaskManager.getInstance().save();
+            }
+        });
+        if(task.isDone()){
+            viewHolder.background.setBackgroundColor(ContextCompat.getColor(mContext, R.color.blue));
+        }
         return convertView;
     }
 
-    private class ViewHolder{
+    private class ViewHolder {
         TextView title, description, deadline;
-        ImageView done;
+        ImageView done, doneAction;
         View background;
 
     }
