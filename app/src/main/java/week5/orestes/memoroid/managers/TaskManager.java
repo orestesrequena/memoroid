@@ -5,6 +5,8 @@ import com.orhanobut.hawk.Hawk;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import week5.orestes.memoroid.common.Constants;
@@ -51,6 +53,18 @@ public class TaskManager {
                 result.add(t);
             }
         }
+        Collections.sort(result, new Comparator<Task>() {
+            @Override
+            public int compare(Task o1, Task o2) {
+                if(o1.getDeadLine() != o2.getDeadLine()){
+                    return Long.valueOf(o2.getDeadLine() - o1.getDeadLine()).intValue();
+
+                }else {
+                    return o1.getPriority() - o2.getPriority();
+                }
+
+            }
+        });
         return result;
     }
 
