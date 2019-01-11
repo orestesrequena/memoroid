@@ -27,6 +27,8 @@ import week5.orestes.memoroid.common.WebServerint;
 import week5.orestes.memoroid.managers.TaskManager;
 import week5.orestes.memoroid.model.Exemple;
 import week5.orestes.memoroid.model.Task;
+import week5.orestes.memoroid.model.UserJava;
+import week5.orestes.memoroid.model.UserKt;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, CompoundButton.OnCheckedChangeListener {
 
@@ -64,17 +66,46 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         WebServerint webServerint = retrofit.create(WebServerint.class);
-        webServerint.getMyExample().enqueue(new Callback<Exemple>() {
+//        webServerint.getMyExample().enqueue(new Callback<Exemple>() {
+//            @Override
+//            public void onResponse(Call<Exemple> call, Response<Exemple> response) {
+//                Toast.makeText(getApplicationContext(), response.body().getHello(), Toast.LENGTH_SHORT).show();
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Exemple> call, Throwable t) {
+//
+//            }
+//        });
+        /// end api request hello world
+        //api request for userJava
+//        webServerint.getUser().enqueue(new Callback<UserJava>() {
+//            @Override
+//            public void onResponse(Call<UserJava> call, Response<UserJava> response) {
+//                Toast.makeText(getApplicationContext(), "Hello "+response.body().getFirstName() +" "+response.body().getLastName() , Toast.LENGTH_SHORT).show();
+//            }
+//
+//            @Override
+//            public void onFailure(Call<UserJava> call, Throwable t) {
+//
+//            }
+//        });
+//        //end api request userJava
+        //api request for userJava
+        //webrequest en kotlin
+        webServerint.getUser().enqueue(new Callback<UserKt>() {
             @Override
-            public void onResponse(Call<Exemple> call, Response<Exemple> response) {
-                Toast.makeText(getApplicationContext(), response.body().getHello(), Toast.LENGTH_SHORT).show();
+            public void onResponse(Call<UserKt> call, Response<UserKt> response) {
+                Toast.makeText(getApplicationContext(), "Hello "+response.body().getFirstName() +" "+response.body().getLastName() , Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onFailure(Call<Exemple> call, Throwable t) {
+            public void onFailure(Call<UserKt> call, Throwable t) {
 
             }
         });
+        //end api request userkotlin
+
     }
 
     @Override
